@@ -4,6 +4,8 @@
 
 纯 Python 标准库，零依赖，零生产改动，sandbox 参考实现。MIT 许可。
 
+[English](README_EN.md)
+
 > 状态：**参考实现（reference implementation）**。不是生产级系统，不接真实执行链路，不含系统账号隔离。边界见文末。
 
 ---
