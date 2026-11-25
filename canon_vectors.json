@@ -1,0 +1,70 @@
+{
+  "spec_version": "0.1",
+  "purpose": "跨实现 canonical 口径对齐——验③前置，不是账本验证",
+  "rule": "sort keys ascending; no spaces; UTF-8 unescaped; sha256 raw hex",
+  "python_reference": "json.dumps(obj, sort_keys=True, separators=(",
+  ", ": "), ensure_ascii=False).encode(\"utf-8\")",
+  "vectors": [
+    {
+      "id": "V1-KEYORDER",
+      "desc": "键插入序与字典序不同",
+      "obj": {
+        "z": 1,
+        "a": 2,
+        "m": {
+          "y": 3,
+          "b": 4
+        }
+      },
+      "expected_sha256": "1b40eaf8e14bceb66fd919e3cc2448d42be66c0da4f4f156099c12f5099ff394"
+    },
+    {
+      "id": "V2-NONASCII",
+      "desc": "中文与 emoji，测 ensure_ascii/UTF-8",
+      "obj": {
+        "channel": "意图",
+        "note": "言行差额",
+        "symbol": "🖤"
+      },
+      "expected_sha256": "a087bb3e25e6d4873f3ba7db10e7c9065ccae2f32bc81a91b1c2cb31f51f0004"
+    },
+    {
+      "id": "V3-ESCAPE",
+      "desc": "引号/反斜杠/换行/制表符",
+      "obj": {
+        "q": "a\"b",
+        "bs": "a\\b",
+        "nl": "a\nb",
+        "tab": "a\tb"
+      },
+      "expected_sha256": "895a53459a1a7f3c464e5aede6b7a752bcba8ffdd3e2e5bc7695df9f756c623c"
+    },
+    {
+      "id": "V4-NUMBERS",
+      "desc": "整数/浮点/负零/指数",
+      "obj": {
+        "i": 100,
+        "f": 1.5,
+        "nz": -0.0,
+        "e": 1e-07,
+        "big": 9007199254740993
+      },
+      "expected_sha256": "2c02496c3f940cf1654d82caec89446eb54dbf359a02f13cb2fe72e8745c71d6"
+    },
+    {
+      "id": "V5-EVENT",
+      "desc": "一条真实结构的事件（无链字段）",
+      "obj": {
+        "seq": 3,
+        "channel": "action",
+        "actor_ref": "actor@peer-v1",
+        "scope_ref": "scope_task_B",
+        "rule_version": "0.1",
+        "content_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "outcome": "success",
+        "authority_level": "authorize"
+      },
+      "expected_sha256": "340656cf9516a285ae284ad28055127aa5d04bbc18065e927a0b702d35185768"
+    }
+  ]
+}
