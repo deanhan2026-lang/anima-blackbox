@@ -8,6 +8,8 @@ Pure Python standard library, zero dependencies, zero production changes, refere
 
 [简体中文](README.md)
 
+**Architecture & governance docs**: [Architecture whitepaper](docs/ARCHITECTURE.md) · [Aviation black box lessons](docs/AVIATION_LESSONS.md) · [Storage permission gate](docs/STORAGE_GATE.md)
+
 ---
 
 ## Thirty seconds, no pip / no network
@@ -94,7 +96,7 @@ Key design choices:
 1. **Reference implementation, not a production system**: no real agent execution chain; events are constructed by the self-test.
 2. **Process isolation is simulated**: permissions via `writer_token`; real OS account / file permission isolation is out of scope.
 3. **Ledger A is inherently weaker than B**: A is the subject's own account; "cannot be edited after writing" ≠ "was true when written". This detects self-deception only if declarations actually land in an immutable ledger.
-4. **Finite depth**: `replay()` is labelled `CL1-digest-consistency` — digest-level consistency is externally verifiable; full semantic replay requires the external party to hold the same `scope_registry`. We do not claim to solve "who verifies the verifier".
+4. **Finite depth**: `replay()` has two levels — without a scope registry it performs digest-level checks only (`CL1-digest-consistency`), proving "not tampered with" but **not** that the verdict is correct; with the same-version registry it actually re-runs the reconciliation and compares outcomes (`CL2-semantic`), which is the only level that qualifies as a replayable verdict unit. The registry is given by digest, never in plaintext; external parties must hold the same version themselves. We do not claim to solve "who verifies the verifier".
 5. **Anchoring is an interface, not an implementation**: head digests are anchorable, but the bundle contains no real external anchoring / dispatch.
 6. **Tamper-evident ≠ true**: a hash chain guarantees internal consistency only; it cannot stop two ends colluding to rewrite and rebuild the whole chain. External anchoring and independent recomputation nodes are the source of external validity — neither is provided here.
 7. **Tamper-proof ≠ forgery-proof**: append-only prevents editing the past (tamper), not fabricating that something happened (forge) — a record can be complete and the chain valid while "the subject was aware of this event" never occurred. `attestation.py` provides a sandbox prototype: writes carry the writer's own conclusion summary; delegated signatures are marked and downgraded to weak evidence. System-level distinction of real credential holders is out of scope (requires OS account isolation).
