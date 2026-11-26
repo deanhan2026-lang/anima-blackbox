@@ -36,8 +36,10 @@ VECTORS = [
      'obj': {'channel': '意图', 'note': '言行差额', 'symbol': '🖤'}},
     {'id': 'V3-ESCAPE', 'desc': '引号/反斜杠/换行/制表符',
      'obj': {'q': 'a"b', 'bs': 'a\\b', 'nl': 'a\nb', 'tab': 'a\tb'}},
-    {'id': 'V4-NUMBERS', 'desc': '整数/浮点/负零/指数',
-     'obj': {'i': 100, 'f': 1.5, 'nz': -0.0, 'e': 1e-7, 'big': 9007199254740993}},
+    {'id': 'V4-NUMBERS', 'desc': '数值以十进制字符串承载（跨实现口径裁定 2026-11-25：'
+     'JS Number 精度/负零/指数格式与 Python 不同，故账本数值一律字符串化，禁裸数字）',
+     'obj': {'i': '100', 'f': '1.500000', 'nz': '0', 'e': '0.000000',
+             'big': '9007199254740993'}},
     {'id': 'V5-EVENT', 'desc': '一条真实结构的事件（无链字段）',
      'obj': {'seq': 3, 'channel': 'action', 'actor_ref': 'actor@peer-v1',
              'scope_ref': 'scope_task_B', 'rule_version': '0.1',
